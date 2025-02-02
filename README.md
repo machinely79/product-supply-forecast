@@ -1,6 +1,6 @@
 # Product Delivery Forecasting in Supply Chain based on LightGBM Regression
 
-This application implements a **LightGBM regression model** for **multivariate and multi-output forecasting** in supply chain management. It predicts the next **delivery quantity and its expected date at a hierarchical level**, covering various products and delivery locations.
+This application implements a **LightGBM regression model** for **multivariate and multi-output forecasting** in supply chain management. It predicts the next **delivery quantity and its expected date at a hierarchical level**, covering various products and delivery locations. The model predicts the upcoming deliveries and delivery dates for approximately 5,000 locations and around 800 products.
 
 ![SCMap](https://github.com/machinely79/product-supply-forecast/blob/main/images/SCMap.png)
 
