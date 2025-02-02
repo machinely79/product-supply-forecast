@@ -83,7 +83,7 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
                                    cv = cv_split, 
                                    param_grid = hyp_parameters, 
                                    scoring = "neg_mean_absolute_error",
-                                   n_jobs= 6)
+                                   n_jobs= -1)
         
         grid_search.fit(X_train, y_train)
        
@@ -113,7 +113,7 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
                                    #param_grid = best_hyp_parameters, 
                                    param_grid = {key: [best_hyp_parameters[key]] for key in best_hyp_parameters},
                                    scoring = "neg_mean_absolute_error",
-                                   n_jobs= 6)
+                                   n_jobs= -1)
         
         grid_search.fit(X_train, y_train)
         
@@ -170,7 +170,7 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
                                                cv = cv_split, 
                                                param_grid = hyp_parameters, 
                                                scoring = "neg_mean_absolute_error",
-                                               n_jobs= 6)
+                                               n_jobs= -1)
         
         grid_search_forec_date.fit(X_train_forec_date, y_train_forec_date)
        
@@ -186,7 +186,7 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
         # save new best model hyperparameters
         joblib.dump(best_hyp_parameters_forec_date, model_file_path_forec_date)
         
-        print("parameters search after a one month")
+        print("parameters search after a one week")
         
     else:
         #if it hasn't been a one week - read previous model hyperparameters
@@ -200,7 +200,7 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
                                                #param_grid = best_hyp_parameters, 
                                                param_grid = {key: [best_hyp_parameters_forec_date[key]] for key in best_hyp_parameters_forec_date},
                                                scoring = "neg_mean_absolute_error",
-                                               n_jobs= 6)
+                                               n_jobs= -1)
         
         grid_search_forec_date.fit(X_train_forec_date, y_train_forec_date)
         
