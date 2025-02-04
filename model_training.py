@@ -44,15 +44,15 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
     # traning for sales volume predictions ------------------------------------------------------------------------------------
 
     
-    X_train = prepared_data_forec_sales.drop(['datum',
-                                              'isporuke',
-                                              'povrati',
-                                              'prodaja',
-                                              'prodaja_bez_uvećanja',
+    X_train = prepared_data_forec_sales.drop(['date',
+                                              'deliveries',
+                                              'returns',
+                                              'sale',
+                                              'sale_without_increase',
                                               'days_until_next_date'], axis=1)
     
     
-    y_train = prepared_data_forec_sales['prodaja']
+    y_train = prepared_data_forec_sales['sale']
     
     
     
@@ -68,15 +68,19 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
         #if a week has passed
         cv_split = TimeSeriesSplit(n_splits = 4)
         
-        hyp_parameters = {
+        """ hyp_parameters = {
             "max_depth": [3, 4, 6, 5, 10],
             "num_leaves": [10, 20, 30, 40, 100, 120],
             "learning_rate": [0.01, 0.05, 0.1, 0.2, 0.3],
             "n_estimators": [50, 100, 300, 500, 700, 900, 1000],
             "colsample_bytree": [0.3, 0.5, 0.7, 1],
             "objective": ['tweedie', 'regression']
-         }
+         } """
         
+        hyp_parameters = {
+            "max_depth": [3],
+            "num_leaves": [10]
+         }
         
         lgb_regress = LGBMRegressor()
         grid_search = GridSearchCV(estimator = lgb_regress, 
@@ -129,21 +133,21 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
 
     last_training_forec_date = datetime.fromtimestamp(os.path.getmtime(model_file_path_forec_date))
 
-    features_for_checks_forec_date = prepared_data_forec_date[['datum',
+    features_for_checks_forec_date = prepared_data_forec_date[['date',
                                                                'days_until_next_date']]
     
     
-    X_train_forec_date = prepared_data_forec_date.drop(['datum',
+    X_train_forec_date = prepared_data_forec_date.drop(['date',
                                                         'dayOfWeek',
                                                         'month',
                                                         'quarter',
-                                                        'sezona',
+                                                        'season',
                                                         'week_in_month',
                                                         'holidays',
                                                         'days_until_next_date',
-                                                        'povrati',
-                                                        'prodaja',
-                                                        'prodaja_bez_uvećanja'], axis=1)
+                                                        'returns',
+                                                        'sale',
+                                                        'sale_without_increase'], axis=1)
     
 
     
@@ -155,15 +159,19 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
         #if a week has passed
         cv_split = TimeSeriesSplit(n_splits = 4)
         
-        hyp_parameters = {
+        """ hyp_parameters = {
             "max_depth": [3, 4, 6, 5, 10],
             "num_leaves": [10, 20, 30, 40, 100, 120],
             "learning_rate": [0.01, 0.05, 0.1, 0.2, 0.3],
             "n_estimators": [50, 100, 300, 500, 700, 900, 1000],
             "colsample_bytree": [0.3, 0.5, 0.7, 1],
             'objective': ['tweedie', 'regression']
-         }
+         } """
         
+        hyp_parameters = {
+            "max_depth": [3],
+            "num_leaves": [10]
+         }
         
         lgb_regress = LGBMRegressor()
         grid_search_forec_date = GridSearchCV(estimator = lgb_regress, 

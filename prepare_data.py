@@ -21,83 +21,83 @@ def prepare(product_deliveries, product_returns, products_category):
     '''
     
     # product deliveries -------------------------------------------------------
-    product_deliveries['datum'] = pd.to_datetime(product_deliveries['datum'])
+    product_deliveries['date'] = pd.to_datetime(product_deliveries['date'])
 
     #product_deliveries = product_deliveries.dropna()
 
-    group_product_deliveries = product_deliveries.groupby(['sifra_objekta',
-                                                           'sifra_artikla', 
-                                                           'datum'], sort=False)['kolicina'].sum().reset_index()
+    group_product_deliveries = product_deliveries.groupby(['delivery_point_id',
+                                                           'product_id', 
+                                                           'date'], sort=False)['quantity'].sum().reset_index()
     
 
     
     # product returns ----------------------------------------------------------
-    product_returns['datum'] = pd.to_datetime(product_returns['datum'])
+    product_returns['date'] = pd.to_datetime(product_returns['date'])
 
-    group_product_returns = product_returns.groupby(['sifra_objekta', 
-                                                     'sifra_artikla', 
-                                                     'datum'], sort=False)['kolicina'].sum().reset_index()
+    group_product_returns = product_returns.groupby(['delivery_point_id', 
+                                                     'product_id', 
+                                                     'date'], sort=False)['quantity'].sum().reset_index()
 
-    group_product_returns = group_product_returns.rename({'kolicina': 'povrati'}, axis=1)
+    group_product_returns = group_product_returns.rename({'quantity': 'returns'}, axis=1)
 
     # merge product deliveries and product returns
-    data_prepared = group_product_deliveries.merge(group_product_returns, on=['sifra_objekta',
-                                                                               'sifra_artikla',
-                                                                               'datum'],
+    data_prepared = group_product_deliveries.merge(group_product_returns, on=['delivery_point_id',
+                                                                               'product_id',
+                                                                               'date'],
                                                                                 how='left')
     
     # number of deliveries by groups -----------------------------------------------
-    group_count = data_prepared.groupby(['sifra_objekta',
-                                         'sifra_artikla'])['datum'].count().sort_values().reset_index()
+    group_count = data_prepared.groupby(['delivery_point_id',
+                                         'product_id'])['date'].count().sort_values().reset_index()
     
     #selecting only frequent delivery locations (>60)
-    group_count['select'] = np.where((group_count['datum']) > 60, 1, 0)
-    group_count.drop(['datum'], inplace=True, axis=1)
+    group_count['select'] = np.where((group_count['date']) > 60, 1, 0)
+    group_count.drop(['date'], inplace=True, axis=1)
     
-    data_prepared = data_prepared.merge(group_count, on=['sifra_objekta',
-                                                         'sifra_artikla'], how='left')
+    data_prepared = data_prepared.merge(group_count, on=['delivery_point_id',
+                                                         'product_id'], how='left')
     
     data_prepared = data_prepared[(data_prepared["select"] == 1)]
     data_prepared.drop(['select'], inplace=True, axis=1)
     
 
-    data_prepared['povrati'] = data_prepared['povrati'].fillna(0)
-    data_prepared['povrati'] = np.where((data_prepared['povrati']) < 1, 0, data_prepared['povrati'])
+    data_prepared['returns'] = data_prepared['returns'].fillna(0)
+    data_prepared['returns'] = np.where((data_prepared['returns']) < 1, 0, data_prepared['returns'])
 
-    data_prepared = data_prepared.rename({'kolicina': 'isporuke'}, axis=1)
+    data_prepared = data_prepared.rename({'quantity': 'deliveries'}, axis=1)
 
-    data_prepared['prodaja'] = data_prepared['isporuke'] - data_prepared['povrati']
+    data_prepared['sale'] = data_prepared['deliveries'] - data_prepared['returns']
 
     #if sales are less than 0, then transfer deliveries
-    data_prepared['prodaja'] = np.where((data_prepared['prodaja']) < 0, 
-                                        data_prepared['isporuke'], 
-                                        data_prepared['prodaja'])
+    data_prepared['sale'] = np.where((data_prepared['sale']) < 0, 
+                                        data_prepared['deliveries'], 
+                                        data_prepared['sale'])
 
     #sales correction: sales = if (deliveries == returns) & (sales == 0) then sales equals deliveries, otherwise keep sales."
-    data_prepared['prodaja'] = np.where((data_prepared['isporuke'] == data_prepared['povrati']) & (data_prepared['prodaja'] == 0), 
-                                         data_prepared['isporuke'], 
-                                         data_prepared['prodaja'])
+    data_prepared['sale'] = np.where((data_prepared['deliveries'] == data_prepared['returns']) & (data_prepared['sale'] == 0), 
+                                         data_prepared['deliveries'], 
+                                         data_prepared['sale'])
 
-    data_prepared = data_prepared.merge(products_category[['sifra_artikla',
+    data_prepared = data_prepared.merge(products_category[['product_id',
                                                            'category_description']], 
-                                        on='sifra_artikla', 
+                                        on='product_id', 
                                         how='left')
 
-    data_prepared['prodaja_bez_uvećanja'] =  data_prepared['prodaja'] 
+    data_prepared['sale_without_increase'] =  data_prepared['sale'] 
     
     def target_sales(df):
         if df['category_description'] == 'Dnevni hleb':
-            return df['prodaja'] * 1.04 # 4% increase
+            return df['sale'] * 1.04 # 4% increase
         else: 
-            return df['prodaja'] * 1.06  # 6% increase
+            return df['sale'] * 1.06  # 6% increase
         
-    data_prepared['prodaja'] = data_prepared.apply(target_sales, axis=1)
+    data_prepared['sale'] = data_prepared.apply(target_sales, axis=1)
 
     data_prepared.drop(['category_description'], inplace=True, axis=1)
     
-    data_prepared = data_prepared.sort_values(by = ['sifra_objekta', 
-                                                   'sifra_artikla', 
-                                                   'datum'], ascending = True)
+    data_prepared = data_prepared.sort_values(by = ['delivery_point_id', 
+                                                   'product_id', 
+                                                   'date'], ascending = True)
     
     return(data_prepared)
 

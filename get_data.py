@@ -25,10 +25,10 @@ def load_data(file_path, deliveries_file, product_returns_file, products_categor
     full_path_products_category = os.path.join(file_path, products_category_file)
     
     
-    header = ["sifra_kupca", "sifra_objekta", "datum", "sifra_artikla", "kolicina"]
+    header = ["customer_id", "delivery_point_id", "date", "product_id", "quantity"]
 
-    type_dict = {'sifra_kupca': 'object', 'sifra_objekta': 'object',
-                  'sifra_artikla':'object', 'kolicina': 'float'}
+    type_dict = {'customer_id': 'object', 'delivery_point_id': 'object',
+                  'product_id':'object', 'quantity': 'float'}
     
 
     # deliveries ----------------------------------------------------------
@@ -43,10 +43,10 @@ def load_data(file_path, deliveries_file, product_returns_file, products_categor
                                     sep=',', 
                                     index_col=False)
 
-    products_category = products_category.rename({'procut_code': 'sifra_artikla'}, axis=1)
+    products_category = products_category.rename({'procut_code': 'product_id'}, axis=1)
 
-    product_deliveries = product_deliveries.merge(products_category[['sifra_artikla','product_name','category_description']],
-                                                 left_on='sifra_artikla', right_on='sifra_artikla', how='left')
+    product_deliveries = product_deliveries.merge(products_category[['product_id','product_name','category_description']],
+                                                 left_on='product_id', right_on='product_id', how='left')
 
     product_deliveries = product_deliveries.dropna()
 
@@ -60,11 +60,11 @@ def load_data(file_path, deliveries_file, product_returns_file, products_categor
                                        dtype=type_dict, 
                                        index_col=False)
 
-    product_returns = product_returns.merge(products_category[['sifra_artikla',
+    product_returns = product_returns.merge(products_category[['product_id',
                                            'product_name',
                                            'category_description']],
-                        left_on='sifra_artikla',
-                        right_on='sifra_artikla',
+                        left_on='product_id',
+                        right_on='product_id',
                         how='left')
 
     product_returns = product_returns.dropna()

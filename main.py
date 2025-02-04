@@ -43,9 +43,9 @@ model_trained = model_training.train_model(prepared_data['prepared_data_forec_sa
 predictions = predictions.make_predictions(model_trained, 
                                            prepared_data['prepared_data_forec_sales'], 
                                            prepared_data['prepared_data_forec_date'], 
-                                           prepared_data['Sezona_map'], 
-                                           prepared_data['Artikal_map'], 
-                                           prepared_data['Objekat_map'])
+                                           prepared_data['season_mapping'], 
+                                           prepared_data['product_mapping'], 
+                                           prepared_data['delivery_point_mapping'])
 
 
 
