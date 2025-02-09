@@ -21,7 +21,7 @@ On average, about **800 more items** were delivered daily than needed for sales.
 
 #### Training and Validation: The model was trained and validated using data from January 1, 2018 to December 30, 2020. A five-fold cross-validation approach was applied. The average daily error (returns) per split ranged between 300 and 600 items.
 
-#### Testing: The model was tested on data from January 1, 2021 to December 31, 2021. The observed average daily error (returns) was approximately 400 items.
+#### Testing: The model was tested on data from January 1, 2021 to December 31, 2021. The observed mean absolute error (product returns) was approximately 400 items.
 
 #### Note:  
 Only a subset of the dataset has been uploaded to the repository for demonstration purposes. The full dataset is not included due to size and confidentiality constraints.
