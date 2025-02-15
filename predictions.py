@@ -101,7 +101,7 @@ def make_predictions(model_trained, prepared_data_forec_sales, prepared_data_for
     })).reset_index(drop=True)
     
     
-    # coding string season to int
+    # string  to int
     next_day_prediction_df['season'] = next_day_prediction_df['season'].map(season_mapping).astype('int')
 
     # make predictions
@@ -109,7 +109,7 @@ def make_predictions(model_trained, prepared_data_forec_sales, prepared_data_for
     predictions = model_forec_sales.predict(next_day_prediction_df)
     next_day_prediction_df['quantity_predictions'] = predictions
 
-    #inverse mapping (artikal and objekat)
+    #inverse mapping
     inv_product_id_map={v: k for k, v in product_mapping.items()}
     inv_delivery_point_id_map={v: k for k, v in delivery_point_mapping.items()}
 
@@ -128,7 +128,7 @@ def make_predictions(model_trained, prepared_data_forec_sales, prepared_data_for
     df_sales_predictions['quantity_predictions'] = df_sales_predictions['quantity_predictions'].round(0)
 
     
-    #  for date of deliveries predictions -----------------------------
+    #  for date of delivery predictions -----------------------------
 
     
     last_deliveries_date = prepared_data_forec_date.groupby(['delivery_point_id', 'product_id'])['date'].max().reset_index()
@@ -199,7 +199,7 @@ def make_predictions(model_trained, prepared_data_forec_sales, prepared_data_for
     df_deliveries_predictions = df_deliveries_predictions.merge(last_deliveries_date, on=['delivery_point_id',
                                                                                           'product_id'],
                                                                                             how='left')
-    #the largest date in the data set
+    
     max_date = prepared_data_forec_date['date'].max()
     
     df_deliveries_predictions['max_date'] = max_date
@@ -221,7 +221,7 @@ def make_predictions(model_trained, prepared_data_forec_sales, prepared_data_for
         else:
             predicted_date = df['last_deliv_date'] + timedelta(days=df['deliverie_predictions'])
     
-        # checking if predicted_date falls on a holiday 
+        # Checking if the predicted date falls on a holiday.
         serbia_holidays = holidays.Serbia()
         while predicted_date in serbia_holidays:
             predicted_date += timedelta(days=1)
