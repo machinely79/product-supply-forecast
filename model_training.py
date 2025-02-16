@@ -68,19 +68,15 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
         #if a week has passed
         cv_split = TimeSeriesSplit(n_splits = 4)
         
-        """ hyp_parameters = {
+        hyp_parameters = {
             "max_depth": [3, 4, 6, 5, 10],
             "num_leaves": [10, 20, 30, 40, 100, 120],
             "learning_rate": [0.01, 0.05, 0.1, 0.2, 0.3],
             "n_estimators": [50, 100, 300, 500, 700, 900, 1000],
             "colsample_bytree": [0.3, 0.5, 0.7, 1],
             "objective": ['tweedie', 'regression']
-         } """
+         } 
         
-        hyp_parameters = {
-            "max_depth": [3],
-            "num_leaves": [10]
-         }
         
         lgb_regress = LGBMRegressor()
         grid_search = GridSearchCV(estimator = lgb_regress, 
@@ -159,19 +155,15 @@ def train_model(prepared_data_forec_sales, prepared_data_forec_date):
         #if a week has passed
         cv_split = TimeSeriesSplit(n_splits = 4)
         
-        """ hyp_parameters = {
+        hyp_parameters = {
             "max_depth": [3, 4, 6, 5, 10],
             "num_leaves": [10, 20, 30, 40, 100, 120],
             "learning_rate": [0.01, 0.05, 0.1, 0.2, 0.3],
             "n_estimators": [50, 100, 300, 500, 700, 900, 1000],
             "colsample_bytree": [0.3, 0.5, 0.7, 1],
             'objective': ['tweedie', 'regression']
-         } """
+         } 
         
-        hyp_parameters = {
-            "max_depth": [3],
-            "num_leaves": [10]
-         }
         
         lgb_regress = LGBMRegressor()
         grid_search_forec_date = GridSearchCV(estimator = lgb_regress, 
