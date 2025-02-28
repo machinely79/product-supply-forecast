@@ -28,3 +28,5 @@ Only a subset of the dataset has been uploaded to the repository for demonstrati
 
 ## Achieving Business Value: 7% Reduction in Returns  
 The application has **reduced returns (write-off costs) by an average of approximately 7%**.
+
+![Deliveries](https://github.com/machinely79/product-supply-forecast/blob/main/images/ML_deliveries.png)
