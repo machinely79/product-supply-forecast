@@ -23,10 +23,12 @@ On average, about **800 more items** were delivered daily than needed for sales.
 
 #### Testing: The model was tested on data from January 1, 2021 to December 31, 2021. The observed mean absolute error (product returns) was approximately 400 items.
 
+![ML_Deliveries](https://github.com/machinely79/product-supply-forecast/blob/main/images/ML_deliveries.png)
+
+
 #### Note:  
 Only a subset of the dataset has been uploaded to the repository for demonstration purposes. The full dataset is not included due to size and confidentiality constraints.
 
 ## Achieving Business Value: 7% Reduction in Returns  
 The application has **reduced returns (write-off costs) by an average of approximately 7%**.
 
-![Deliveries](https://github.com/machinely79/product-supply-forecast/blob/main/images/ML_deliveries.png)
