@@ -87,9 +87,9 @@ def prepare(product_deliveries, product_returns, products_category):
     
     def target_sales(df):
         if df['category_description'] == 'Dnevni hleb':
-            return df['sale'] * 1.04 # 4% increase
+            return df['sale'] * 1.03 # 4% increase
         else: 
-            return df['sale'] * 1.06  # 6% increase
+            return df['sale'] * 1.04  # 6% increase
         
     data_prepared['sale'] = data_prepared.apply(target_sales, axis=1)
 
